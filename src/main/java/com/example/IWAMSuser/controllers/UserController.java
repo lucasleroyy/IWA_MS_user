@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Liste tous les utilisateurs
     @GetMapping
@@ -35,6 +39,8 @@ public class UserController {
     // Crée un nouvel utilisateur
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
+        // Hacher le mot de passe avant de sauvegarder
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = userRepository.saveAndFlush(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
@@ -62,4 +68,3 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 }
-

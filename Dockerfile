@@ -1,5 +1,5 @@
 # --- Build stage for Spring Boot application ---
-FROM gradle:8-jdk21-alpine AS build
+FROM gradle:7-jdk17-alpine AS build
 
 # Set the working directory
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN gradle build -x test --no-daemon
 
 # --- Runtime stage ---
-FROM openjdk:21-jdk-slim
+FROM openjdk:17-jdk-slim
 
 # Install PostgreSQL
 RUN apt-get update && \
