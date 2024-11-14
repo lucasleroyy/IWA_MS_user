@@ -1,6 +1,6 @@
 package com.example.IWAMSuser.controllers;
 
-import com.example.IWAMSuser.models.User;
+import com.example.IWAMSuser.models.UserModel;
 import com.example.IWAMSuser.repositories.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +24,24 @@ public class UserController {
 
     // Liste tous les utilisateurs
     @GetMapping
-    public List<User> list() {
+    public List<UserModel> list() {
         return userRepository.findAll();
     }
 
     // Récupère un utilisateur par ID
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable Long id) {
-        User user = userRepository.findById(id)
+    public ResponseEntity<UserModel> get(@PathVariable Long id) {
+        UserModel user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " not found"));
         return ResponseEntity.ok(user);
     }
 
     // Crée un nouvel utilisateur
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<UserModel> create(@RequestBody UserModel user) {
         // Hacher le mot de passe avant de sauvegarder
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User createdUser = userRepository.saveAndFlush(user);
+        UserModel createdUser = userRepository.saveAndFlush(user);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
@@ -57,14 +57,14 @@ public class UserController {
 
     // Met à jour un utilisateur existant
     @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
-        User existingUser = userRepository.findById(id)
+    public ResponseEntity<UserModel> update(@PathVariable Long id, @RequestBody UserModel user) {
+        UserModel existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " not found"));
 
         // Copie des propriétés, ignore `userId` pour ne pas écraser l'ID de l'utilisateur existant
         BeanUtils.copyProperties(user, existingUser, "userId");
 
-        User updatedUser = userRepository.saveAndFlush(existingUser);
+        UserModel updatedUser = userRepository.saveAndFlush(existingUser);
         return ResponseEntity.ok(updatedUser);
     }
 }

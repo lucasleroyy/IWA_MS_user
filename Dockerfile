@@ -1,5 +1,5 @@
 # --- Build stage for Spring Boot application ---
-FROM gradle:7-jdk17-alpine AS build
+FROM gradle:8-jdk17 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -7,22 +7,17 @@ WORKDIR /app
 # Copy the Gradle build files
 COPY build.gradle.kts settings.gradle.kts ./
 
-# Fetch dependencies
-RUN gradle dependencies --no-daemon
+# Pre-fetch dependencies to leverage Docker layer caching
+RUN gradle build --no-daemon -x test
 
 # Copy the application source code
 COPY . .
 
-# Build the application without running tests
-RUN gradle build -x test --no-daemon
+# Build the application, skipping tests to speed up the process
+RUN gradle build --no-daemon -x test
 
 # --- Runtime stage ---
-FROM openjdk:17-jdk-slim
-
-# Install PostgreSQL
-RUN apt-get update && \
-    apt-get install -y postgresql postgresql-contrib && \
-    rm -rf /var/lib/apt/lists/*
+FROM openjdk:21-jdk-slim
 
 # Set the working directory for the application
 WORKDIR /app
@@ -30,15 +25,8 @@ WORKDIR /app
 # Copy the built application jar from the build stage
 COPY --from=build /app/build/libs/*.jar app.jar
 
-# Copy the init.sql script to set up the database
-COPY init.sql /docker-entrypoint-initdb.d/
+# Expose the application port
+EXPOSE 8080
 
-# Copy the custom entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# Expose the application port and PostgreSQL port
-EXPOSE 8080 5432
-
-# Use the entrypoint script
-ENTRYPOINT ["docker-entrypoint.sh"]
+# Start the application
+CMD ["java", "-jar", "app.jar"]

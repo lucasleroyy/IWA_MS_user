@@ -10,7 +10,7 @@ import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "users")  // Optionnel: Assurez-vous que le nom de la table correspond bien
-public class User {
+public class UserModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,9 @@ public class User {
     private String phoneNumber;
 
     // Constructeurs
-    public User() {}
+    public UserModel() {}
 
-    public User(String firstName, String lastName, String email, String password, String phoneNumber) {
+    public UserModel(String firstName, String lastName, String email, String password, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

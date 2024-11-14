@@ -1,6 +1,6 @@
 package com.example.IWAMSuser.controllers;
 
-import com.example.IWAMSuser.models.User;
+import com.example.IWAMSuser.models.UserModel;
 import com.example.IWAMSuser.repositories.UserRepository;
 import com.example.IWAMSuser.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,9 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        User existingUser = userRepository.findByEmail(user.getEmail())
+    @PostMapping()
+    public ResponseEntity<?> login(@RequestBody UserModel user) {
+        UserModel existingUser = userRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         if (passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
@@ -46,6 +46,5 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
     }
-
 }
 

@@ -21,19 +21,20 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.postgresql:postgresql")
-    implementation("org.springframework.security:spring-security-crypto") // Pour BCrypt
-
-    // Dépendance pour JSON Web Token (JWT)
-    implementation("io.jsonwebtoken:jjwt:0.9.1")
-
-    // Dépendance pour les classes jakarta.servlet
-    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
+    implementation("org.springframework.security:spring-security-crypto")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    implementation("jakarta.servlet:jakarta.servlet-api")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.9.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.9.0")
 }
 
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    mainClass.set("com.example.IWAMSuser.IwaMsUserApplication") // Remplacez par le chemin réel de votre classe principale
+}
 
 tasks.withType<Test> {
     useJUnitPlatform()
