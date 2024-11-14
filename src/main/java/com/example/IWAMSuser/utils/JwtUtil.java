@@ -1,5 +1,6 @@
 package com.example.IWAMSuser.utils;
 
+import com.example.IWAMSuser.models.UserModel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -25,6 +26,15 @@ public class JwtUtil {
                 .getBody()
                 .getSubject();
     }
+    public Long extractUserId(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("userId", Long.class); // Récupérer l'ID de l'utilisateur
+    }
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -36,9 +46,10 @@ public class JwtUtil {
     }
 
 
-    public String generateToken(String username) {
+    public String generateToken(UserModel user) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getEmail())
+                .claim("userId", user.getUserId()) // Ajouter l'ID de l'utilisateur comme claim
                 .signWith(secretKey)
                 .compact();
     }
