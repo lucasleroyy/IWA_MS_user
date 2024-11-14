@@ -1,5 +1,6 @@
 CREATE TABLE users (
                        user_id serial NOT NULL PRIMARY KEY,
+                        role varchar(250) NOT NULL ,
                        first_name varchar(30) NOT NULL,
                        last_name varchar(30) NOT NULL,
                        email varchar(80) NOT NULL,
@@ -19,8 +20,8 @@ CREATE TABLE user_locations (
                                 location_id integer NOT NULL REFERENCES locations (location_id)
 );
 
-INSERT INTO users (first_name, last_name, email, phone_number, password)
-VALUES ('Tom', 'Robinson', 'tom.rob@yopmail.com', '+15103754657', '123456');
+INSERT INTO users (first_name, role, last_name, email, phone_number, password)
+VALUES ('Tom','user','Robinson', 'tom.rob@yopmail.com', '+15103754657', '123456');
 
 INSERT INTO locations (latitude, longitude, location_date)
 VALUES (43.63746472422702, 3.8409670228559136, now());

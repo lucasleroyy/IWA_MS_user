@@ -16,6 +16,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId; // Utiliser camelCase pour les noms de variables
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
@@ -85,6 +88,14 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
 

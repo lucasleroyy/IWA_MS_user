@@ -33,8 +33,12 @@ COPY --from=build /app/build/libs/*.jar app.jar
 # Copy the init.sql script to set up the database
 COPY init.sql /docker-entrypoint-initdb.d/
 
+# Copy the custom entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # Expose the application port and PostgreSQL port
 EXPOSE 8080 5432
 
-# Start PostgreSQL and the application
-CMD service postgresql start && java -jar app.jar
+# Use the entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]
