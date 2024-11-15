@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/users/**").permitAll()
+                .requestMatchers("/favoris/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

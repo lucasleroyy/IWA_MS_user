@@ -8,20 +8,16 @@ CREATE TABLE users (
                        password varchar(100) NOT NULL
 );
 
-CREATE TABLE locations (
-                           location_id serial PRIMARY KEY,
-                           latitude numeric(18, 16) NOT NULL,
-                           longitude numeric(18, 16) NOT NULL,
-                           location_date timestamp without time zone NOT NULL
-);
-
-CREATE TABLE user_locations (
-                                user_id integer NOT NULL REFERENCES users (user_id),
-                                location_id integer NOT NULL REFERENCES locations (location_id)
+-- Création de la table favorites
+CREATE TABLE favoris (
+                           favoris_id SERIAL PRIMARY KEY,
+                           user_id INTEGER NOT NULL REFERENCES users(user_id),
+                           location_id INTEGER NOT NULL
 );
 
 INSERT INTO users (first_name, role, last_name, email, phone_number, password)
 VALUES ('Tom','user','Robinson', 'tom.rob@yopmail.com', '+15103754657', '123456');
 
-INSERT INTO locations (latitude, longitude, location_date)
-VALUES (43.63746472422702, 3.8409670228559136, now());
+
+-- Insertion d'exemples de favoris
+INSERT INTO favoris (user_id, location_id) VALUES (1, 1);
