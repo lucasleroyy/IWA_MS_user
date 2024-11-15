@@ -19,7 +19,7 @@ public class FavorisModel {
     private Integer userId;
 
     @Column(nullable = false)
-    private Integer locationId;
+    private Long locationId;
 
     // Getters and Setters
     public Integer getFavoriteId() {
@@ -38,11 +38,11 @@ public class FavorisModel {
         this.userId = userId;
     }
 
-    public Integer getLocationId() {
+    public Long getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(Integer locationId) {
+    public void setLocationId(Long locationId) {
         this.locationId = locationId;
     }
 }
