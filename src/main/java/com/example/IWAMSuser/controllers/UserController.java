@@ -36,14 +36,21 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // Crée un nouvel utilisateur
     @PostMapping
-    public ResponseEntity<UserModel> create(@RequestBody UserModel user) {
-        // Hacher le mot de passe avant de sauvegarder
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        UserModel createdUser = userRepository.saveAndFlush(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+public ResponseEntity<UserModel> create(@RequestBody UserModel user) {
+    System.out.println("Utilisateur reçu : " + user);
+    // Attribuer un rôle par défaut
+    if (user.getRole() == null || user.getRole().isEmpty()) {
+        user.setRole("user");
     }
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    UserModel createdUser = userRepository.saveAndFlush(user);
+
+    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+}
+
+    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+}
 
     // Supprime un utilisateur par ID
     @DeleteMapping("/{id}")
