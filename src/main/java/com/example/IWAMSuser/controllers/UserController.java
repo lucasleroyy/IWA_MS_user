@@ -49,9 +49,6 @@ public ResponseEntity<UserModel> create(@RequestBody UserModel user) {
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
 }
 
-    return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-}
-
     // Supprime un utilisateur par ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
