@@ -7,4 +7,6 @@ import java.util.List;
 public interface FavorisRepository extends JpaRepository<FavorisModel, Integer> {
     // Méthode pour récupérer les favoris d'un utilisateur spécifique
     List<FavorisModel> findByUserId(Integer userId);
+
+    boolean existsByUserIdAndLocationId(Integer userId, Integer locationId);
 }

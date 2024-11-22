@@ -74,4 +74,9 @@ public class FavorisService {
             System.err.println("Erreur lors de l'appel au service de notifications : " + e.getMessage());
         }
     }
+
+    public boolean isFavorite(Integer userId, Integer locationId) {
+        return favorisRepository.existsByUserIdAndLocationId(userId, locationId);
+    }
+
 }

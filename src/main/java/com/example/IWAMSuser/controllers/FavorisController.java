@@ -47,4 +47,13 @@ public class FavorisController {
         favorisService.deleteFavorite(favoriteId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/user/{userId}/location/{locationId}")
+    public ResponseEntity<Boolean> isFavorite(
+            @PathVariable Integer userId,
+            @PathVariable Integer locationId) {
+        boolean isFavorite = favorisService.isFavorite(userId, locationId);
+        return ResponseEntity.ok(isFavorite);
+    }
+
 }
