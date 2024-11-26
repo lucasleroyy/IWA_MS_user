@@ -47,12 +47,15 @@ public class JwtUtil {
 
 
     public String generateToken(UserModel user) {
-        return Jwts.builder()
-                .setSubject(user.getEmail())
-                .claim("userId", user.getUserId()) // Ajouter l'ID de l'utilisateur comme claim
-                .signWith(secretKey)
-                .compact();
-    }
+    long expirationTimeMillis = 1000 * 60 * 60 * 10; // 10 heures
+    return Jwts.builder()
+            .setSubject(user.getEmail())
+            .claim("userId", user.getUserId()) // Ajouter l'ID de l'utilisateur comme claim
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + expirationTimeMillis)) // Ajouter une expiration
+            .signWith(secretKey)
+            .compact();
+}
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))

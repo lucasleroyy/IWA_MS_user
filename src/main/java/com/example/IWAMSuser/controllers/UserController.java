@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+
 
 import java.util.List;
 
@@ -61,14 +63,35 @@ public ResponseEntity<UserModel> create(@RequestBody UserModel user) {
 
     // Met à jour un utilisateur existant
     @PutMapping("/{id}")
-    public ResponseEntity<UserModel> update(@PathVariable Long id, @RequestBody UserModel user) {
-        UserModel existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " not found"));
+public ResponseEntity<UserModel> update(@PathVariable Long id, @RequestBody UserModel user, Authentication authentication) {
+    // Récupérer l'utilisateur connecté
+    String loggedInUserEmail = authentication.getName(); // Récupère l'email de l'utilisateur connecté
+    System.out.println("Utilisateur connecté : " + loggedInUserEmail);
 
-        // Copie des propriétés, ignore `userId` pour ne pas écraser l'ID de l'utilisateur existant
-        BeanUtils.copyProperties(user, existingUser, "userId");
+    // Récupérer l'utilisateur existant à mettre à jour
+    UserModel existingUser = userRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " not found"));
 
-        UserModel updatedUser = userRepository.saveAndFlush(existingUser);
-        return ResponseEntity.ok(updatedUser);
+    // Vérifier si l'utilisateur connecté tente de modifier son propre profil
+    if (!existingUser.getEmail().equals(loggedInUserEmail)) {
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own profile.");
     }
+
+    // Mettre à jour les champs autorisés
+    existingUser.setFirstName(user.getFirstName());
+    existingUser.setLastName(user.getLastName());
+    existingUser.setPhoneNumber(user.getPhoneNumber());
+
+    // Si un mot de passe est fourni, le réencoder
+    if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+        existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
+
+    // Sauvegarder les modifications
+    UserModel updatedUser = userRepository.saveAndFlush(existingUser);
+
+    return ResponseEntity.ok(updatedUser);
+}
+
+
 }
